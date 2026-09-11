@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IS Standards Recommendation Engine</title>
+  <meta name="description" content="AI-powered recommendation engine for identifying applicable Indian Standards (IS/BIS codes) for procurement specifications." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="flag-bar" aria-hidden="true">
+      <span class="saffron"></span>
+      <span class="white"></span>
+      <span class="green"></span>
+    </div>
+    <div class="header-text">
+      <h1>IS Standards Recommendation Engine</h1>
+      <p>Bureau of Indian Standards (BIS) · AI-Powered · Procurement Intelligence</p>
+    </div>
+    <div class="header-badge" id="status-badge">
+      <span class="dot"></span>
+      <span id="status-text">Connecting...</span>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-icon">📋</div>
+      <h2>Find Applicable Indian Standards</h2>
+      <p>Enter a procurement specification and our AI will identify all relevant IS/BIS codes, explain why they apply, and flag mandatory certifications.</p>
+      <div class="stats-bar">
+        <div class="stat">
+          <div class="stat-num">41</div>
+          <div class="stat-label">IS Standards</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">9</div>
+          <div class="stat-label">Categories</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">38</div>
+          <div class="stat-label">Reference Queries</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Input -->
+    <div class="input-card">
+      <label class="input-label" for="spec-input">Procurement Specification</label>
+      <textarea
+        id="spec-input"
+        placeholder="e.g. Supply of TMT reinforcement bars, Fe 500D grade, for RCC column and beam work at construction site..."
+        rows="4"
+      ></textarea>
+
+      <div class="examples-label">Try an example:</div>
+      <div class="examples" id="examples-container"></div>
+
+      <div class="submit-row">
+        <button id="submit-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          Find Applicable Standards
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading">
+      <div class="spinner"></div>
+      <div class="loading-text">Searching IS Standards database...</div>
+      <div class="loading-sub">Analyzing your specification with AI</div>
+    </div>
+
+    <!-- Error -->
+    <div id="error-card"></div>
+
+    <!-- Result -->
+    <div id="result-card">
+      <div class="result-header">
+        <div class="result-header-icon">✅</div>
+        <div class="result-header-text">
+          <h3>Applicable Indian Standards</h3>
+          <p id="result-meta">Based on your procurement specification</p>
+        </div>
+      </div>
+      <div class="result-body" id="result-body"></div>
+    </div>
+
+  </main>
+
+  <footer>
+    IS Standards Recommendation Engine &nbsp;·&nbsp;
+    <span>Smart India Hackathon 2026</span> &nbsp;·&nbsp;
+    Bureau of Indian Standards · AI Recommendation System
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
