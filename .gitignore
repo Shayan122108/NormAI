@@ -1,0 +1,9 @@
+
+# Open Notebook - runtime data (never commit these)
+surreal_data/
+notebook_data/
+
+# Vite / Node frontend
+node_modules/
+dist/
+.vite/
