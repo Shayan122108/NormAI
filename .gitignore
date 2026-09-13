@@ -1,9 +1,28 @@
 
-# Open Notebook - runtime data (never commit these)
+# Backend runtime data (never commit database/uploaded files)
 surreal_data/
 notebook_data/
+pipeline_data/
+rag_data/
+backend_data/
+*.db
 
-# Vite / Node frontend
+# Frontend dependencies and builds
 node_modules/
 dist/
 .vite/
+
+# Python cache & environments
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+.venv/
+*.egg-info/
+
+# Media and large assets
+pics/
+*.mp4
+*.mkv
+*.mov

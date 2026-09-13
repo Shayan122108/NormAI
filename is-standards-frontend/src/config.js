@@ -1,16 +1,23 @@
-export const OPEN_NOTEBOOK_API = 'http://localhost:5055';
-export const NOTEBOOK_ID = 'notebook:q9gsb3nvnw9bvghshg58';
+import { PROCUREMENT_EXAMPLES_BY_CATEGORY } from './standardsData.js';
 
+export const RAG_BACKEND_API = 'http://localhost:5055';
+// Custom RAG Pipeline Knowledge Base Collection ID
+export const KNOWLEDGE_BASE_ID = 'notebook:q9gsb3nvnw9bvghshg58';
+
+// Flattened list for quick chips
 export const EXAMPLES = [
+  'Supply of TMT reinforcement bars Fe 500D grade for RCC column and beam work',
+  'Procurement of 43 Grade Ordinary Portland Cement for RCC construction work',
   'PVC insulated cables for 1100V internal building wiring',
-  'Safety helmets for construction site workers',
-  'Earthing system installation for server room',
+  'Safety helmets and protective footwear for construction site workers',
+  'Installation of pipe and plate earthing system for server room',
   'uPVC pipes for drinking water supply distribution',
-  'Desktop computers and printers for office IT upgrade',
+  'Desktop computers, LED monitors, and laser printers for office IT upgrade',
   'Hot rolled structural steel plates for workshop shed fabrication',
-  'TMT reinforcement bars Fe 500D for RCC column and beam work',
-  'Insulating rubber gloves for high-voltage line maintenance',
+  'Insulating rubber gloves for high-voltage line maintenance'
 ];
+
+export { PROCUREMENT_EXAMPLES_BY_CATEGORY };
 
 export const SYSTEM_PROMPT = `You are an expert on Indian Standards (IS/BIS codes) for government procurement in India.
 

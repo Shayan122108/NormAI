@@ -3,42 +3,69 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IS Standards Recommendation Engine</title>
-  <meta name="description" content="AI-powered recommendation engine for identifying applicable Indian Standards (IS/BIS codes) for procurement specifications." />
+  <title>NormAI | Bureau of Indian Standards Intelligence (SIH 2026)</title>
+  <meta name="description" content="NormAI — AI-powered recommendation engine and procurement compliance audit system for Bureau of Indian Standards (IS/BIS codes)." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/src/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
+  <!-- Ambient Glow Background Canvas -->
+  <div class="tricolor-ambient" aria-hidden="true">
+    <div class="glow-saffron"></div>
+    <div class="glow-blue"></div>
+    <div class="glow-green"></div>
+  </div>
+
   <!-- Header -->
   <header>
-    <div class="flag-bar" aria-hidden="true">
-      <span class="saffron"></span>
-      <span class="white"></span>
-      <span class="green"></span>
+    <div class="header-brand">
+      <div class="flag-bar" aria-hidden="true">
+        <span class="saffron"></span>
+        <span class="white"></span>
+        <span class="green"></span>
+      </div>
+      <div class="header-text">
+        <div class="badge-tag">GOVERNMENT OF INDIA · SIH 2026</div>
+        <h1>NormAI</h1>
+        <p>Bureau of Indian Standards · GeM Procurement Compliance & RAG Architecture</p>
+      </div>
     </div>
-    <div class="header-text">
-      <h1>IS Standards Recommendation Engine</h1>
-      <p>Bureau of Indian Standards (BIS) · AI-Powered · Procurement Intelligence</p>
-    </div>
-    <div class="header-badge" id="status-badge">
-      <span class="dot"></span>
-      <span id="status-text">Connecting...</span>
+
+    <div class="header-actions">
+      <button class="nav-btn" id="open-catalog-btn" title="Browse all 41 curated Indian Standards">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-0-5H20"/>
+        </svg>
+        Standards Catalog (41)
+      </button>
+
+      <div class="header-badge" id="status-badge" title="Live Engine Status">
+        <span class="dot"></span>
+        <span id="status-text">Checking Engine...</span>
+      </div>
     </div>
   </header>
 
-  <!-- Main -->
+  <!-- Main Container -->
   <main>
 
-    <!-- Hero -->
-    <div class="hero">
-      <div class="hero-icon">📋</div>
-      <h2>Find Applicable Indian Standards</h2>
-      <p>Enter a procurement specification and our AI will identify all relevant IS/BIS codes, explain why they apply, and flag mandatory certifications.</p>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-emblem">
+        <span class="emblem-symbol">🇮🇳</span>
+      </div>
+      <h2>NormAI</h2>
+      <p class="hero-subheading">AI-Powered Indian Standards Recommendation Engine</p>
+      <p>Instant semantic matching of procurement specifications against the Bureau of Indian Standards (BIS) knowledge base, enforcing mandatory Quality Control Orders (QCO) and generating GeM bid clauses.</p>
+
+      <!-- Stats Ribbon -->
       <div class="stats-bar">
         <div class="stat">
-          <div class="stat-num">41</div>
+          <div class="stat-num" id="stat-standards-count">41</div>
           <div class="stat-label">IS Standards</div>
         </div>
         <div class="stat-divider"></div>
@@ -48,62 +75,279 @@
         </div>
         <div class="stat-divider"></div>
         <div class="stat">
-          <div class="stat-num">38</div>
-          <div class="stat-label">Reference Queries</div>
+          <div class="stat-num stat-alert">14</div>
+          <div class="stat-label">Mandatory QCOs</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num stat-success">100%</div>
+          <div class="stat-label">Offline Resilient</div>
         </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Input -->
-    <div class="input-card">
-      <label class="input-label" for="spec-input">Procurement Specification</label>
+    <!-- Mode Switcher Tabs -->
+    <nav class="mode-tabs" role="tablist">
+      <button class="tab-btn active" id="tab-single" role="tab" aria-selected="true">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        Single Specification Query
+      </button>
+      <button class="tab-btn" id="tab-boq" role="tab" aria-selected="false">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+        </svg>
+        Multi-Item Tender / BOQ Analyzer
+        <span class="tab-pill">NEW</span>
+      </button>
+    </nav>
+
+    <!-- Single Spec Mode Card -->
+    <section class="card input-card" id="single-spec-card">
+      <div class="card-header">
+        <label class="input-label" for="spec-input">
+          Procurement Specification / Tender Requirement
+        </label>
+        <span class="input-hint">Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to analyze</span>
+      </div>
+
       <textarea
         id="spec-input"
         placeholder="e.g. Supply of TMT reinforcement bars, Fe 500D grade, for RCC column and beam work at construction site..."
         rows="4"
+        spellcheck="false"
       ></textarea>
 
-      <div class="examples-label">Try an example:</div>
-      <div class="examples" id="examples-container"></div>
+      <!-- Live Candidate Standards Preview Pill -->
+      <div id="live-detector" class="live-detector" style="display: none;">
+        <span class="detector-label">⚡ Instant Candidate Matches:</span>
+        <div id="detector-chips" class="detector-chips"></div>
+      </div>
+
+      <!-- Quick Preset Categories -->
+      <div class="preset-section">
+        <div class="preset-header">
+          <span class="preset-label">Curated Tender Presets:</span>
+          <div class="category-pills" id="category-pills"></div>
+        </div>
+        <div class="examples" id="examples-container"></div>
+      </div>
 
       <div class="submit-row">
-        <button id="submit-btn">
+        <button id="clear-btn" class="secondary-btn" title="Clear input">Clear</button>
+        <button id="submit-btn" class="primary-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
-          Find Applicable Standards
+          Analyze Applicable Standards
         </button>
       </div>
+    </section>
+
+    <!-- Multi-Item BOQ Mode Card -->
+    <section class="card input-card" id="boq-mode-card" style="display: none;">
+      <div class="card-header">
+        <label class="input-label" for="boq-input">
+          Paste Multi-Line Tender Document or Bill of Quantities (BOQ)
+        </label>
+        <button id="load-sample-boq" class="text-link-btn">Load Sample 4-Item BOQ</button>
+      </div>
+
+      <textarea
+        id="boq-input"
+        placeholder="Paste your multi-item tender lines, for example:
+1. Supply of 43 Grade Ordinary Portland Cement for RCC works
+2. Thermo-Mechanically Treated (TMT) steel rebar Fe 500D
+3. Unplasticized PVC pipes 110mm diameter Class 3
+4. Industrial safety helmets and leather safety boots with steel toe"
+        rows="7"
+        spellcheck="false"
+      ></textarea>
+
+      <div class="submit-row">
+        <button id="clear-boq-btn" class="secondary-btn">Clear</button>
+        <button id="submit-boq-btn" class="primary-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+          </svg>
+          Audit Full Tender BOQ
+        </button>
+      </div>
+    </section>
+
+    <!-- Loading State Indicator -->
+    <div id="loading" class="loading-panel" style="display: none;">
+      <div class="spinner-wrapper">
+        <div class="spinner"></div>
+        <div class="spinner-inner"></div>
+      </div>
+      <div class="loading-text" id="loading-title">Evaluating Procurement Specification...</div>
+      <div class="loading-sub" id="loading-sub">Cross-referencing 41 BIS standards & checking Quality Control Orders</div>
     </div>
 
-    <!-- Loading -->
-    <div id="loading">
-      <div class="spinner"></div>
-      <div class="loading-text">Searching IS Standards database...</div>
-      <div class="loading-sub">Analyzing your specification with AI</div>
-    </div>
+    <!-- Error State -->
+    <div id="error-card" class="error-panel" style="display: none;"></div>
 
-    <!-- Error -->
-    <div id="error-card"></div>
+    <!-- Single Spec Result Card -->
+    <section id="result-card" class="result-card" style="display: none;">
+      <div class="result-toolbar">
+        <div class="result-meta-group">
+          <div class="result-badge-row">
+            <span class="engine-badge" id="result-engine-badge">⚡ BIS Intelligence</span>
+            <span class="compliance-badge" id="result-compliance-badge">100% Compliant</span>
+          </div>
+          <h3 id="result-heading">Applicable Bureau of Indian Standards (BIS)</h3>
+          <p id="result-meta">Evaluated specification</p>
+        </div>
 
-    <!-- Result -->
-    <div id="result-card">
-      <div class="result-header">
-        <div class="result-header-icon">✅</div>
-        <div class="result-header-text">
-          <h3>Applicable Indian Standards</h3>
-          <p id="result-meta">Based on your procurement specification</p>
+        <div class="action-buttons">
+          <button id="btn-copy-gem" class="tool-btn" title="Copy ready-to-paste GeM tender technical clause">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy GeM Clause
+          </button>
+          <button id="btn-export-dossier" class="tool-btn" title="Generate official printable BIS Compliance Dossier">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print Dossier
+          </button>
+          <button id="btn-export-json" class="tool-btn" title="Export audit data in JSON">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            JSON
+          </button>
         </div>
       </div>
+
+      <!-- Mandatory QCO Alert Banner if mandatory standards detected -->
+      <div id="qco-alert-banner" class="qco-banner" style="display: none;">
+        <div class="qco-icon">🚨</div>
+        <div class="qco-content">
+          <strong>Mandatory BIS Quality Control Order (QCO) Detected:</strong>
+          <span id="qco-banner-text"></span>
+        </div>
+      </div>
+
+      <!-- Structured Standards Cards Grid -->
+      <div class="standards-grid" id="standards-grid"></div>
+
+      <!-- Markdown Report Body -->
       <div class="result-body" id="result-body"></div>
-    </div>
+    </section>
+
+    <!-- Multi-Item BOQ Result Section -->
+    <section id="boq-result-card" class="result-card" style="display: none;">
+      <div class="result-toolbar">
+        <div>
+          <div class="result-badge-row">
+            <span class="engine-badge">📑 Tender BOQ Audit</span>
+            <span class="compliance-badge" id="boq-coverage-badge">Coverage: 100%</span>
+          </div>
+          <h3>Consolidated Tender Compliance Matrix</h3>
+          <p id="boq-summary-meta">Multi-line procurement analysis</p>
+        </div>
+
+        <div class="action-buttons">
+          <button id="btn-boq-copy-gem" class="tool-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy Consolidated GeM Clause
+          </button>
+          <button id="btn-boq-print" class="tool-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print BOQ Audit
+          </button>
+        </div>
+      </div>
+
+      <!-- BOQ Items Table -->
+      <div class="table-responsive">
+        <table class="boq-table">
+          <thead>
+            <tr>
+              <th style="width: 45px;">#</th>
+              <th>Tender Line Item</th>
+              <th>Applicable IS Code(s)</th>
+              <th style="width: 140px; text-align: center;">Certification Status</th>
+              <th style="width: 110px;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="boq-table-body"></tbody>
+        </table>
+      </div>
+    </section>
 
   </main>
 
+  <!-- Interactive Standards Catalog Modal -->
+  <div id="catalog-modal" class="modal-backdrop" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-icon">📚</span>
+          <div>
+            <h3>Bureau of Indian Standards — Master Catalog</h3>
+            <p>Curated repository of 41 Indian Standards with QCO certification status</p>
+          </div>
+        </div>
+        <button id="close-catalog-btn" class="modal-close-btn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-filters">
+        <div class="search-input-wrapper">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input type="text" id="catalog-search" placeholder="Search by IS code (e.g. IS 1786, IS 456) or keyword..." />
+        </div>
+
+        <select id="catalog-category-select">
+          <option value="ALL">All Categories (9)</option>
+        </select>
+
+        <label class="toggle-checkbox">
+          <input type="checkbox" id="catalog-mandatory-only" />
+          <span>Mandatory QCO Only</span>
+        </label>
+      </div>
+
+      <div class="modal-body" id="catalog-list"></div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast" style="display: none;"></div>
+
+  <!-- Footer -->
   <footer>
-    IS Standards Recommendation Engine &nbsp;·&nbsp;
-    <span>Smart India Hackathon 2026</span> &nbsp;·&nbsp;
-    Bureau of Indian Standards · AI Recommendation System
+    <div class="footer-content">
+      <div>
+        <strong>NormAI</strong> &nbsp;·&nbsp;
+        <span>Smart India Hackathon 2026</span> &nbsp;·&nbsp;
+        Bureau of Indian Standards · AI-Powered Procurement Intelligence
+      </div>
+      <div class="footer-sub">
+        Self-Hosted RAG Pipeline with Resilient Local BIS Knowledge Architecture
+      </div>
+    </div>
   </footer>
 
   <script type="module" src="/src/main.js"></script>
