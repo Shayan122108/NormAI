@@ -83,6 +83,72 @@ is-standards-frontend/
 
 ---
 
+## 🚀 Getting Started & How to Run
+
+### 📋 Prerequisites
+
+Make sure you have the following installed on your system:
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop/)** (with Docker Compose)
+- **[Node.js](https://nodejs.org/)** (v18 or newer) & **npm**
+- *(Optional)* An API key from **OpenAI**, **Google Gemini**, or a local **[Ollama](https://ollama.com/)** instance.
+
+---
+
+### Step 1: Start the RAG Backend (Docker)
+
+Navigate to the `rag-backend` folder and launch the self-hosted RAG services (SurrealDB + Backend API):
+
+```bash
+cd rag-backend
+docker compose up -d
+```
+
+Once running, the backend services will be accessible at:
+- **Knowledge Base Management UI**: [http://localhost:8502](http://localhost:8502)
+- **FastAPI REST API**: [http://localhost:5055](http://localhost:5055)
+- **SurrealDB Database**: `ws://localhost:8000`
+
+---
+
+### Step 2: Configure AI Model & Ingest Dataset (One-Time Setup)
+
+1. Open the Knowledge Base UI at **[http://localhost:8502](http://localhost:8502)**.
+2. Go to **Settings → AI Providers**:
+   - Add your API Key (e.g., OpenAI or Google Gemini) or configure Ollama (`http://host.docker.internal:11434`).
+3. Go to **Settings → Models & Default Models**:
+   - **Default Chat Model**: e.g. `gpt-4o-mini`, `gemini-1.5-flash`, or `llama3.1`
+   - **Default Embedding Model**: e.g. `text-embedding-3-small` (OpenAI) or `embedding-001` (Gemini) / `nomic-embed-text` (Ollama).
+4. **Upload the Curated IS Standards Knowledge Base**:
+   - In the UI, click **Upload Source** and select [`combined_procurement_reference.md`](combined_procurement_reference.md) (located in the project root).
+   - The engine will automatically chunk, embed, and index all 41 standards and 38 query templates.
+
+---
+
+### Step 3: Launch the Frontend Application
+
+Open a new terminal window in the project root and run:
+
+```bash
+cd is-standards-frontend
+npm install
+npm run dev
+```
+
+Open your browser at **[http://localhost:5173](http://localhost:5173)** to access the **NormAI** interface.
+
+---
+
+### 💡 Features & Usage
+
+1. **Single Specification Matching**: Enter any procurement requirement (or click one of the quick example chips) to find applicable IS standards, certification mandates, and technical scopes.
+2. **Multi-Item Tender / BOQ Analyzer**: Switch to the **Multi-Item Tender** tab to paste multi-line bills of quantities (BOQ) and generate a consolidated procurement compliance matrix.
+3. **Standards Catalog (41 Standards)**: Click **Standards Catalog (41)** in the header to browse, filter by category, and search across all curated Bureau of Indian Standards codes.
+4. **Official BIS Compliance Dossier**: Click **Export Official BIS Dossier** on any result to generate a printable, audit-ready compliance document complete with reference tracking IDs and signature blocks.
+5. **GeM Bid Clause Generator**: Click **Copy GeM Bid Clause** to generate copy-pasteable legal compliance clauses for tender documents.
+6. **Zero-Downtime Offline Fallback**: NormAI includes a built-in client-side semantic engine that automatically ensures evaluations work even if the backend is offline or models are loading.
+
+---
+
 ## 3. Feasibility and Viability
 
 ### Analysis of Feasibility
